@@ -31,10 +31,9 @@ use plagiarism_lucide\local\queue;
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements
-        \core_privacy\local\metadata\provider,
-        \core_plagiarism\privacy\plagiarism_provider,
-        \core_plagiarism\privacy\plagiarism_user_provider {
-
+    \core_plagiarism\privacy\plagiarism_provider,
+    \core_plagiarism\privacy\plagiarism_user_provider,
+    \core_privacy\local\metadata\provider {
     /**
      * Describe the stored and transmitted data.
      *
@@ -88,7 +87,9 @@ class provider implements
                 'report_expires_on' => $row->expiresat ? \core_privacy\local\request\transform::datetime($row->expiresat) : null,
             ];
             writer::with_context($context)->export_data(
-                array_merge($subcontext, [get_string('privacy:export', 'plagiarism_lucide'), $row->id]), $data);
+                array_merge($subcontext, [get_string('privacy:export', 'plagiarism_lucide'), $row->id]),
+                $data
+            );
         }
     }
 
@@ -147,8 +148,11 @@ class provider implements
             if ($groups) {
                 [$insql, $params] = $DB->get_in_or_equal($groups, SQL_PARAMS_NAMED);
                 $params['cmid'] = $cmid;
-                $rows += $DB->get_records_select('plagiarism_lucide_src',
-                    "cmid = :cmid AND userid = 0 AND groupid $insql", $params);
+                $rows += $DB->get_records_select(
+                    'plagiarism_lucide_src',
+                    "cmid = :cmid AND userid = 0 AND groupid $insql",
+                    $params
+                );
             }
         }
         return $rows;

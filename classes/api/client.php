@@ -31,9 +31,8 @@ require_once($CFG->libdir . '/filelib.php');
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class client {
-
     /** Production endpoint. */
-    const DEFAULT_BASE_URL = 'https://api.lucide.ai/v1';
+    public const DEFAULT_BASE_URL = 'https://api.lucide.ai/v1';
 
     /** @var string */
     protected $apikey;
@@ -172,7 +171,8 @@ class client {
      */
     protected function make_curl(): \curl {
         // A development endpoint on localhost would be refused by the curl security helper.
-        return new \curl(['ignoresecurity' => self::base_url() !== self::DEFAULT_BASE_URL && !empty($GLOBALS['CFG']->debugdeveloper)]);
+        $development = self::base_url() !== self::DEFAULT_BASE_URL && !empty($GLOBALS['CFG']->debugdeveloper);
+        return new \curl(['ignoresecurity' => $development]);
     }
 
     /**

@@ -28,7 +28,6 @@ use plagiarism_lucide\local\queue;
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class cleanup extends \core\task\scheduled_task {
-
     /**
      * Task name.
      *

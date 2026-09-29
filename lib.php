@@ -39,7 +39,6 @@ use plagiarism_lucide\output\presenter;
  * Lucide plagiarism-API plugin: AI-generated text detection for assignments.
  */
 class plagiarism_plugin_lucide extends plagiarism_plugin {
-
     /**
      * Badge shown next to a submitted file or online text, for teachers only.
      *
@@ -85,8 +84,11 @@ class plagiarism_plugin_lucide extends plagiarism_plugin {
             ], 'id DESC', '*', 0, 1);
             $row = $rows ? reset($rows) : null;
             if (!$row && $userid && !empty($linkarray['assignment'])) {
-                $submissionid = (int) $DB->get_field('assign_submission', 'id',
-                    ['assignment' => $linkarray['assignment'], 'userid' => $userid, 'latest' => 1]);
+                $submissionid = (int) $DB->get_field(
+                    'assign_submission',
+                    'id',
+                    ['assignment' => $linkarray['assignment'], 'userid' => $userid, 'latest' => 1]
+                );
             }
         } else {
             return '';
@@ -122,8 +124,14 @@ class plagiarism_plugin_lucide extends plagiarism_plugin {
         if (!$submission || $submission->status !== ASSIGN_SUBMISSION_STATUS_SUBMITTED || empty($submission->latest)) {
             return null;
         }
-        if (!access::can_see_submission($assign, (int) $submission->userid, (int) $submission->groupid,
-                'plagiarism/lucide:requestscan')) {
+        if (
+            !access::can_see_submission(
+                $assign,
+                (int) $submission->userid,
+                (int) $submission->groupid,
+                'plagiarism/lucide:requestscan'
+            )
+        ) {
             return null;
         }
         return new moodle_url('/plagiarism/lucide/actions.php', [
@@ -187,8 +195,11 @@ function plagiarism_lucide_coursemodule_standard_elements($formwrapper, $mform) 
     if ($cmid) {
         $waiting = count(queue::unanalysed_submissions($cmid));
         if ($waiting > 0) {
-            $mform->addElement('advcheckbox', 'lucide_scanexisting',
-                get_string('scanexisting', 'plagiarism_lucide', $waiting));
+            $mform->addElement(
+                'advcheckbox',
+                'lucide_scanexisting',
+                get_string('scanexisting', 'plagiarism_lucide', $waiting)
+            );
             $mform->addHelpButton('lucide_scanexisting', 'scanexisting', 'plagiarism_lucide');
             $mform->setDefault('lucide_scanexisting', 0);
             $mform->hideIf('lucide_scanexisting', 'lucide_enabled', 'notchecked');

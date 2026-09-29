@@ -47,8 +47,14 @@ if (!settings::is_configured() || !settings::is_enabled_for_cm($cm->id)) {
 
 $submission = $DB->get_record('assign_submission', ['id' => $submissionid, 'assignment' => $cm->instance], '*', MUST_EXIST);
 $assign = access::assign_for_cm($cm->id);
-if (!access::can_see_submission($assign, (int) $submission->userid, (int) $submission->groupid,
-        'plagiarism/lucide:requestscan')) {
+if (
+    !access::can_see_submission(
+        $assign,
+        (int) $submission->userid,
+        (int) $submission->groupid,
+        'plagiarism/lucide:requestscan'
+    )
+) {
     throw new required_capability_exception($context, 'plagiarism/lucide:requestscan', 'nopermissions', '');
 }
 

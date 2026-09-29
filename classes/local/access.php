@@ -33,7 +33,6 @@ require_once($CFG->dirroot . '/mod/assign/locallib.php');
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class access {
-
     /**
      * Whether the current user may see what Lucide says about a submission.
      *
@@ -43,8 +42,12 @@ class access {
      * @param string $capability
      * @return bool
      */
-    public static function can_see_submission(\assign $assign, int $userid, int $groupid,
-            string $capability = 'plagiarism/lucide:viewreport'): bool {
+    public static function can_see_submission(
+        \assign $assign,
+        int $userid,
+        int $groupid,
+        string $capability = 'plagiarism/lucide:viewreport'
+    ): bool {
         global $USER;
 
         $context = $assign->get_context();
@@ -64,8 +67,10 @@ class access {
         }
 
         $cm = $assign->get_course_module();
-        if (groups_get_activity_groupmode($cm) == SEPARATEGROUPS
-                && !has_capability('moodle/site:accessallgroups', $context)) {
+        if (
+            groups_get_activity_groupmode($cm) == SEPARATEGROUPS
+                && !has_capability('moodle/site:accessallgroups', $context)
+        ) {
             $mine = array_keys(groups_get_all_groups($cm->course, $USER->id, $cm->groupingid, 'g.id'));
             if ($userid) {
                 $theirs = array_keys(groups_get_all_groups($cm->course, $userid, $cm->groupingid, 'g.id'));

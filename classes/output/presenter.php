@@ -31,9 +31,8 @@ use plagiarism_lucide\local\queue;
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class presenter {
-
     /** Error codes with their own explanation string. */
-    const KNOWN_ERRORS = [
+    public const KNOWN_ERRORS = [
         'text_too_short', 'text_too_long', 'extracted_text_too_large', 'no_extractable_text', 'unsupported_format',
         'payload_too_large', 'file_rejected', 'timeout', 'insufficient_credits', 'credit_budget_exceeded',
         'credit_replenishment_pending', 'report_unavailable', 'engine_unavailable',
@@ -53,10 +52,15 @@ class presenter {
             if (!$scanurl) {
                 return '';
             }
-            $button = html_writer::link($scanurl, get_string('analysenow', 'plagiarism_lucide'),
-                ['class' => 'plagiarism-lucide-action']);
-            return html_writer::div($brand . ' ' . html_writer::span(get_string('status_none', 'plagiarism_lucide'),
-                'plagiarism-lucide-badge plagiarism-lucide-badge--muted') . ' ' . $button, 'plagiarism-lucide');
+            $button = html_writer::link(
+                $scanurl,
+                get_string('analysenow', 'plagiarism_lucide'),
+                ['class' => 'plagiarism-lucide-action']
+            );
+            return html_writer::div($brand . ' ' . html_writer::span(
+                get_string('status_none', 'plagiarism_lucide'),
+                'plagiarism-lucide-badge plagiarism-lucide-badge--muted'
+            ) . ' ' . $button, 'plagiarism-lucide');
         }
 
         switch ($row->status) {
@@ -65,11 +69,16 @@ class presenter {
                 $class = 'plagiarism-lucide-badge--' . self::verdict_class($row->verdict);
                 $extra = '';
                 if ($row->coverage !== null && $row->coverageprecision !== 'none' && (int) $row->coverage > 0) {
-                    $extra = ' ' . html_writer::span(get_string('coverage_short', 'plagiarism_lucide', (int) $row->coverage),
-                        'plagiarism-lucide-coverage');
+                    $extra = ' ' . html_writer::span(
+                        get_string('coverage_short', 'plagiarism_lucide', (int) $row->coverage),
+                        'plagiarism-lucide-coverage'
+                    );
                 }
-                $link = html_writer::link(new moodle_url('/plagiarism/lucide/report.php', ['id' => $row->id]),
-                    get_string('viewreport', 'plagiarism_lucide'), ['class' => 'plagiarism-lucide-action']);
+                $link = html_writer::link(
+                    new moodle_url('/plagiarism/lucide/report.php', ['id' => $row->id]),
+                    get_string('viewreport', 'plagiarism_lucide'),
+                    ['class' => 'plagiarism-lucide-action']
+                );
                 return html_writer::div($brand . ' ' . html_writer::span($label, 'plagiarism-lucide-badge ' . $class)
                     . $extra . ' ' . $link, 'plagiarism-lucide');
 
@@ -91,8 +100,10 @@ class presenter {
                 $text = get_string('status_failed', 'plagiarism_lucide') . ' — ' . self::error_reason($row->errorcode);
                 $class = 'plagiarism-lucide-badge--muted';
         }
-        return html_writer::div($brand . ' ' . html_writer::span($text, 'plagiarism-lucide-badge ' . $class),
-            'plagiarism-lucide');
+        return html_writer::div(
+            $brand . ' ' . html_writer::span($text, 'plagiarism-lucide-badge ' . $class),
+            'plagiarism-lucide'
+        );
     }
 
     /**

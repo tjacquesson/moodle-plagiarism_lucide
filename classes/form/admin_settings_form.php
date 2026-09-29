@@ -29,7 +29,6 @@ require_once($CFG->libdir . '/formslib.php');
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class admin_settings_form extends \moodleform {
-
     /**
      * Form definition.
      */
@@ -61,8 +60,12 @@ class admin_settings_form extends \moodleform {
         $mform->addElement('select', 'reportretention', get_string('reportretention', 'plagiarism_lucide'), $retention);
         $mform->addHelpButton('reportretention', 'reportretention', 'plagiarism_lucide');
 
-        $mform->addElement('textarea', 'disclosure', get_string('disclosure', 'plagiarism_lucide'),
-            ['rows' => 4, 'cols' => 60]);
+        $mform->addElement(
+            'textarea',
+            'disclosure',
+            get_string('disclosure', 'plagiarism_lucide'),
+            ['rows' => 4, 'cols' => 60]
+        );
         $mform->setType('disclosure', PARAM_TEXT);
         $mform->addHelpButton('disclosure', 'disclosure', 'plagiarism_lucide');
 

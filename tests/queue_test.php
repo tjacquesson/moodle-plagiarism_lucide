@@ -36,9 +36,9 @@ require_once($CFG->dirroot . '/plagiarism/lucide/lib.php');
  * @covers     \plagiarism_lucide\local\queue
  */
 final class queue_test extends \advanced_testcase {
-
     /** A French text long enough for the API. */
-    const TEXT = '<p>Le numérique occupe une place centrale dans notre quotidien.</p><p>Il transforme notre rapport au savoir — et aux autres. 😊</p>';
+    public const TEXT = '<p>Le numérique occupe une place centrale dans notre quotidien.</p>'
+        . '<p>Il transforme notre rapport au savoir — et aux autres. 😊</p>';
 
     /** @var \stdClass */
     protected $course;
@@ -114,7 +114,8 @@ final class queue_test extends \advanced_testcase {
                 'credits' => ['reserved' => 2, 'charged' => 2],
                 'result' => [
                     'schema_version' => '1',
-                    'model' => ['name' => 'lucide-v3', 'version' => null, 'engine' => 'sovereign', 'policy_version' => '2026-09-14'],
+                    'model' => ['name' => 'lucide-v3', 'version' => null, 'engine' => 'sovereign',
+                        'policy_version' => '2026-09-14'],
                     'verdict' => ['code' => 'ai_likely', 'label' => 'Probablement écrit par une IA',
                         'human_likeness_score' => 12, 'confidence' => 'standard'],
                     'coverage' => ['highlighted_ai_percent' => 60, 'precision' => 'sentence', 'reason' => null],
@@ -264,8 +265,12 @@ final class queue_test extends \advanced_testcase {
         $old = $this->sources()[0];
 
         // A teacher reverts to draft, the student edits and hands in again before the cron ran.
-        $DB->set_field('assignsubmission_onlinetext', 'onlinetext', '<p>Nouvelle version du devoir.</p>',
-            ['submission' => $submission->id]);
+        $DB->set_field(
+            'assignsubmission_onlinetext',
+            'onlinetext',
+            '<p>Nouvelle version du devoir.</p>',
+            ['submission' => $submission->id]
+        );
         queue::request_sync($this->cm->id, $submission->id);
         queue::sync_due();
 

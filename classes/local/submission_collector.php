@@ -29,12 +29,11 @@ require_once($CFG->dirroot . '/mod/assign/locallib.php');
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class submission_collector {
-
     /** Largest file accepted by the Lucide API. */
-    const MAX_FILE_BYTES = 10485760;
+    public const MAX_FILE_BYTES = 10485760;
 
     /** Extensions the API extracts, with the MIME type sent. */
-    const SUPPORTED = [
+    public const SUPPORTED = [
         'pdf' => 'application/pdf',
         'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         'txt' => 'text/plain',
@@ -74,8 +73,14 @@ class submission_collector {
         $fileplugin = $assign->get_submission_plugin_by_type('file');
         if ($fileplugin && $fileplugin->is_enabled()) {
             $fs = get_file_storage();
-            $files = $fs->get_area_files($context->id, 'assignsubmission_file', 'submission_files',
-                $submission->id, 'filepath, filename', false);
+            $files = $fs->get_area_files(
+                $context->id,
+                'assignsubmission_file',
+                'submission_files',
+                $submission->id,
+                'filepath, filename',
+                false
+            );
             foreach ($files as $file) {
                 $sources[] = (object) [
                     'sourcetype' => 'file',

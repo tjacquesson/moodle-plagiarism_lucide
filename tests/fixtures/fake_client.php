@@ -28,7 +28,6 @@ use plagiarism_lucide\api\client;
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class fake_client extends client {
-
     /** @var array method => list of answers */
     public $script = [];
     /** @var array list of [method, args] */
@@ -92,38 +91,91 @@ class fake_client extends client {
         return $answer;
     }
 
+    /**
+     * Scripted capabilities.
+     *
+     * @return array
+     */
     public function capabilities(): array {
         return $this->play('capabilities', []);
     }
 
+    /**
+     * Scripted usage.
+     *
+     * @return array
+     */
     public function usage(): array {
         return $this->play('usage', []);
     }
 
+    /**
+     * Scripted create_analysis.
+     *
+     * @param string $idempotencykey
+     * @param array $body
+     * @return array
+     */
     public function create_analysis(string $idempotencykey, array $body): array {
         return $this->play('create_analysis', [$idempotencykey, $body]);
     }
 
+    /**
+     * Scripted get_analysis.
+     *
+     * @param string $id
+     * @return array
+     */
     public function get_analysis(string $id): array {
         return $this->play('get_analysis', [$id]);
     }
 
+    /**
+     * Scripted get_report.
+     *
+     * @param string $id
+     * @return array
+     */
     public function get_report(string $id): array {
         return $this->play('get_report', [$id]);
     }
 
+    /**
+     * Scripted delete_analysis.
+     *
+     * @param string $id
+     */
     public function delete_analysis(string $id): void {
         $this->play('delete_analysis', [$id]);
     }
 
+    /**
+     * Scripted upload_file.
+     *
+     * @param string $path
+     * @param string $mimetype
+     * @param string $postname
+     * @return array
+     */
     public function upload_file(string $path, string $mimetype, string $postname): array {
         return $this->play('upload_file', [$path, $mimetype, $postname]);
     }
 
+    /**
+     * Scripted get_file.
+     *
+     * @param string $id
+     * @return array
+     */
     public function get_file(string $id): array {
         return $this->play('get_file', [$id]);
     }
 
+    /**
+     * Scripted delete_file.
+     *
+     * @param string $id
+     */
     public function delete_file(string $id): void {
         $this->play('delete_file', [$id]);
     }

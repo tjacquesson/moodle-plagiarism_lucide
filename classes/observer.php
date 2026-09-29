@@ -27,7 +27,6 @@ use plagiarism_lucide\local\settings;
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class observer {
-
     /**
      * A work was handed in: read it once the grouping delay is over.
      *

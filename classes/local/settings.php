@@ -24,13 +24,12 @@ namespace plagiarism_lucide\local;
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class settings {
-
     /** Default ceiling of credits for one source: 20 000 words at 1 credit per 100 words. */
-    const DEFAULT_MAX_CREDITS = 200;
+    public const DEFAULT_MAX_CREDITS = 200;
     /** Default local report lifetime in days. */
-    const DEFAULT_REPORT_RETENTION = 365;
+    public const DEFAULT_REPORT_RETENTION = 365;
     /** Retention requested from Lucide; the copy is normally erased as soon as the report is fetched. */
-    const REMOTE_RETENTION = '7d';
+    public const REMOTE_RETENTION = '7d';
 
     /**
      * Read one plugin setting.

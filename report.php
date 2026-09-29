@@ -121,11 +121,18 @@ echo $OUTPUT->heading(get_string('analysedtext', 'plagiarism_lucide'), 3);
 $reason = $row->coveragereason;
 if (!empty($report['segments_available'])) {
     echo html_writer::div(
-        html_writer::tag('mark', get_string('legend_ai', 'plagiarism_lucide'),
-            ['class' => 'plagiarism-lucide-ai plagiarism-lucide-ai--high']) . ' ' .
-        html_writer::tag('mark', get_string('legend_ai_medium', 'plagiarism_lucide'),
-            ['class' => 'plagiarism-lucide-ai plagiarism-lucide-ai--medium']),
-        'plagiarism-lucide-legend');
+        html_writer::tag(
+            'mark',
+            get_string('legend_ai', 'plagiarism_lucide'),
+            ['class' => 'plagiarism-lucide-ai plagiarism-lucide-ai--high']
+        ) . ' ' .
+        html_writer::tag(
+            'mark',
+            get_string('legend_ai_medium', 'plagiarism_lucide'),
+            ['class' => 'plagiarism-lucide-ai plagiarism-lucide-ai--medium']
+        ),
+        'plagiarism-lucide-legend'
+    );
 } else if (in_array($reason, ['human_verdict', 'diffuse', 'unavailable'], true)) {
     echo html_writer::div(get_string('nosegments_' . $reason, 'plagiarism_lucide'), 'plagiarism-lucide-note');
 } else {

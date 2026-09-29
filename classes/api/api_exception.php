@@ -24,19 +24,18 @@ namespace plagiarism_lucide\api;
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class api_exception extends \Exception {
-
     /** The key or the account cannot be used: stop sending until an admin acts. */
-    const KIND_AUTH = 'auth';
+    public const KIND_AUTH = 'auth';
     /** Too many requests: pause the whole queue for a while. */
-    const KIND_THROTTLE = 'throttle';
+    public const KIND_THROTTLE = 'throttle';
     /** Not enough credits: keep the source, retry later without charging. */
-    const KIND_CREDITS = 'credits';
+    public const KIND_CREDITS = 'credits';
     /** The content cannot be analysed: final answer, no charge. */
-    const KIND_CONTENT = 'content';
+    public const KIND_CONTENT = 'content';
     /** The remote object is gone (expired or deleted). */
-    const KIND_GONE = 'gone';
+    public const KIND_GONE = 'gone';
     /** Network failure, outage or engine unavailable: retry with backoff. */
-    const KIND_TRANSIENT = 'transient';
+    public const KIND_TRANSIENT = 'transient';
 
     /** @var string Stable error code from the API (or network_error). */
     public $apicode;
@@ -59,8 +58,14 @@ class api_exception extends \Exception {
      * @param int $retryafter
      * @param array $details
      */
-    public function __construct(string $apicode, string $message, int $httpstatus = 0, bool $retryable = false,
-            int $retryafter = 0, array $details = []) {
+    public function __construct(
+        string $apicode,
+        string $message,
+        int $httpstatus = 0,
+        bool $retryable = false,
+        int $retryafter = 0,
+        array $details = []
+    ) {
         parent::__construct($message);
         $this->apicode = $apicode;
         $this->httpstatus = $httpstatus;
@@ -76,8 +81,10 @@ class api_exception extends \Exception {
      */
     public function kind(): string {
         $code = $this->apicode;
-        if ($this->httpstatus === 401 || in_array($code, ['invalid_token', 'token_expired', 'entitlement_expired',
-                'insufficient_scope', 'feature_not_available'], true)) {
+        if (
+            $this->httpstatus === 401 || in_array($code, ['invalid_token', 'token_expired', 'entitlement_expired',
+                'insufficient_scope', 'feature_not_available'], true)
+        ) {
             return self::KIND_AUTH;
         }
         if (in_array($code, ['insufficient_credits', 'credit_replenishment_pending'], true)) {
@@ -87,12 +94,16 @@ class api_exception extends \Exception {
             // Either the daily cap of the key (wait) or max_credits below the cost (final).
             return isset($this->details['daily_limit_cents']) ? self::KIND_CREDITS : self::KIND_CONTENT;
         }
-        if ($this->httpstatus === 429 || in_array($code, ['rate_limit_exceeded', 'word_rate_exceeded',
-                'queue_limit_exceeded', 'file_storage_limit_exceeded'], true)) {
+        if (
+            $this->httpstatus === 429 || in_array($code, ['rate_limit_exceeded', 'word_rate_exceeded',
+                'queue_limit_exceeded', 'file_storage_limit_exceeded'], true)
+        ) {
             return self::KIND_THROTTLE;
         }
-        if (in_array($code, ['not_found', 'analysis_expired', 'analysis_deleted', 'file_expired'], true)
-                || $this->httpstatus === 404 || $this->httpstatus === 410) {
+        if (
+            in_array($code, ['not_found', 'analysis_expired', 'analysis_deleted', 'file_expired'], true)
+                || $this->httpstatus === 404 || $this->httpstatus === 410
+        ) {
             return self::KIND_GONE;
         }
         if ($this->httpstatus === 0 || $this->httpstatus >= 500 || $this->retryable) {

@@ -39,28 +39,36 @@ require_once($CFG->dirroot . '/mod/assign/locallib.php');
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class queue {
-
-    const STATUS_QUEUED = 'queued';
-    const STATUS_EXTRACTING = 'extracting';
-    const STATUS_ANALYSING = 'analysing';
-    const STATUS_COMPLETED = 'completed';
-    const STATUS_BLOCKED = 'blocked';
-    const STATUS_FAILED = 'failed';
-    const STATUS_UNSUPPORTED = 'unsupported';
-    const STATUS_SUPERSEDED = 'superseded';
-    const STATUS_EXPIRED = 'expired';
+    /** Waiting to be sent. */
+    public const STATUS_QUEUED = 'queued';
+    /** File uploaded, text being extracted by Lucide. */
+    public const STATUS_EXTRACTING = 'extracting';
+    /** Analysis admitted by Lucide. */
+    public const STATUS_ANALYSING = 'analysing';
+    /** Report stored in Moodle. */
+    public const STATUS_COMPLETED = 'completed';
+    /** Refused for lack of credits, retried later without charge. */
+    public const STATUS_BLOCKED = 'blocked';
+    /** Not analysable, final. */
+    public const STATUS_FAILED = 'failed';
+    /** Format never sent. */
+    public const STATUS_UNSUPPORTED = 'unsupported';
+    /** Replaced by a newer version before being sent. */
+    public const STATUS_SUPERSEDED = 'superseded';
+    /** Local report purged after its retention. */
+    public const STATUS_EXPIRED = 'expired';
 
     /** Statuses that still need a call to Lucide. */
-    const ACTIVE = [self::STATUS_QUEUED, self::STATUS_BLOCKED, self::STATUS_EXTRACTING, self::STATUS_ANALYSING];
+    public const ACTIVE = [self::STATUS_QUEUED, self::STATUS_BLOCKED, self::STATUS_EXTRACTING, self::STATUS_ANALYSING];
 
     /** Give up sending a source after this long without admission. */
-    const DEADLINE = DAYSECS;
+    public const DEADLINE = DAYSECS;
 
     /** Delays between technical retries, in seconds. */
-    const BACKOFF = [60, 120, 300, 900, 1800, 3600];
+    public const BACKOFF = [60, 120, 300, 900, 1800, 3600];
 
     /** Grouping delay after an editable submission, to absorb quick successive saves. */
-    const DEBOUNCE = 60;
+    public const DEBOUNCE = 60;
 
     /**
      * Ask for a submission to be read and its sources queued.
@@ -142,8 +150,15 @@ class queue {
      */
     public static function sync_due(int $limit = 50): int {
         global $DB;
-        $rows = $DB->get_records_select('plagiarism_lucide_sync', 'notbefore <= ?', [time()],
-            'notbefore ASC, id ASC', '*', 0, $limit);
+        $rows = $DB->get_records_select(
+            'plagiarism_lucide_sync',
+            'notbefore <= ?',
+            [time()],
+            'notbefore ASC, id ASC',
+            '*',
+            0,
+            $limit
+        );
         foreach ($rows as $row) {
             try {
                 self::sync_submission((int) $row->cmid, (int) $row->submissionid);
@@ -232,8 +247,11 @@ class queue {
         }
 
         // Versions replaced before being sent are dropped: they cost nothing.
-        $waiting = $DB->get_records_select('plagiarism_lucide_src', 'submissionid = ? AND status IN (?, ?)',
-            [$submissionid, self::STATUS_QUEUED, self::STATUS_BLOCKED]);
+        $waiting = $DB->get_records_select(
+            'plagiarism_lucide_src',
+            'submissionid = ? AND status IN (?, ?)',
+            [$submissionid, self::STATUS_QUEUED, self::STATUS_BLOCKED]
+        );
         foreach ($waiting as $row) {
             if (($current[$row->identifier] ?? null) !== $row->contenthash) {
                 self::save($row, ['status' => self::STATUS_SUPERSEDED]);
@@ -262,8 +280,15 @@ class queue {
 
         [$insql, $params] = $DB->get_in_or_equal(self::ACTIVE, SQL_PARAMS_NAMED);
         $params['now'] = time();
-        $rows = $DB->get_records_select('plagiarism_lucide_src', "status $insql AND nextattempt <= :now", $params,
-            'nextattempt ASC, id ASC', '*', 0, 100);
+        $rows = $DB->get_records_select(
+            'plagiarism_lucide_src',
+            "status $insql AND nextattempt <= :now",
+            $params,
+            'nextattempt ASC, id ASC',
+            '*',
+            0,
+            100
+        );
 
         foreach ($rows as $row) {
             if (time() >= $stop || settings::auth_block() !== '') {
@@ -691,8 +716,13 @@ class queue {
     public static function purge_expired(): int {
         global $DB;
         $now = time();
-        $expired = $DB->get_records_select('plagiarism_lucide_src', 'status = ? AND expiresat IS NOT NULL AND expiresat < ?',
-            [self::STATUS_COMPLETED, $now], 'id', 'id');
+        $expired = $DB->get_records_select(
+            'plagiarism_lucide_src',
+            'status = ? AND expiresat IS NOT NULL AND expiresat < ?',
+            [self::STATUS_COMPLETED, $now],
+            'id',
+            'id'
+        );
         foreach ($expired as $row) {
             $DB->update_record('plagiarism_lucide_src', (object) [
                 'id' => $row->id,
@@ -709,8 +739,11 @@ class queue {
             ]);
         }
         // Rows that never produced a report are kept as long as a report would have been.
-        $DB->delete_records_select('plagiarism_lucide_src', 'status IN (?, ?, ?) AND timemodified < ?',
-            [self::STATUS_SUPERSEDED, self::STATUS_FAILED, self::STATUS_UNSUPPORTED, $now - settings::report_retention()]);
+        $DB->delete_records_select(
+            'plagiarism_lucide_src',
+            'status IN (?, ?, ?) AND timemodified < ?',
+            [self::STATUS_SUPERSEDED, self::STATUS_FAILED, self::STATUS_UNSUPPORTED, $now - settings::report_retention()]
+        );
         $DB->delete_records_select('plagiarism_lucide_sync', 'timecreated < ?', [$now - WEEKSECS]);
         return count($expired);
     }

@@ -66,8 +66,11 @@ echo $OUTPUT->heading(get_string('pluginname', 'plagiarism_lucide'));
 echo html_writer::div(get_string('settingsintro', 'plagiarism_lucide'), 'plagiarism-lucide-intro');
 
 if (empty($CFG->enableplagiarism)) {
-    echo $OUTPUT->notification(get_string('plagiarismdisabled', 'plagiarism_lucide',
-        (new moodle_url('/admin/search.php', ['query' => 'enableplagiarism']))->out()), 'warning');
+    echo $OUTPUT->notification(get_string(
+        'plagiarismdisabled',
+        'plagiarism_lucide',
+        (new moodle_url('/admin/search.php', ['query' => 'enableplagiarism']))->out()
+    ), 'warning');
 }
 if (settings::delete_right_missing()) {
     echo $OUTPUT->notification(get_string('deleterightmissing', 'plagiarism_lucide'), 'warning');
@@ -105,15 +108,20 @@ if ($test && confirm_sesskey()) {
         }
     }
 }
-echo $OUTPUT->single_button(new moodle_url($pageurl, ['test' => 1, 'sesskey' => sesskey()]),
-    get_string('testconnection', 'plagiarism_lucide'), 'get');
+echo $OUTPUT->single_button(
+    new moodle_url($pageurl, ['test' => 1, 'sesskey' => sesskey()]),
+    get_string('testconnection', 'plagiarism_lucide'),
+    'get'
+);
 
 // Queue health.
 echo $OUTPUT->heading(get_string('queuehealth', 'plagiarism_lucide'), 3);
 $counts = $DB->get_records_sql_menu("SELECT status, COUNT(1) FROM {plagiarism_lucide_src} GROUP BY status");
 $lines = [];
-foreach ([queue::STATUS_QUEUED, queue::STATUS_EXTRACTING, queue::STATUS_ANALYSING, queue::STATUS_BLOCKED,
-        queue::STATUS_COMPLETED, queue::STATUS_FAILED, queue::STATUS_UNSUPPORTED] as $status) {
+foreach (
+    [queue::STATUS_QUEUED, queue::STATUS_EXTRACTING, queue::STATUS_ANALYSING, queue::STATUS_BLOCKED,
+        queue::STATUS_COMPLETED, queue::STATUS_FAILED, queue::STATUS_UNSUPPORTED] as $status
+) {
     $lines[] = html_writer::tag('dt', get_string('health_' . $status, 'plagiarism_lucide'))
         . html_writer::tag('dd', (int) ($counts[$status] ?? 0));
 }

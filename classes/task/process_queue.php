@@ -27,7 +27,6 @@ use plagiarism_lucide\local\settings;
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class process_queue extends \core\task\scheduled_task {
-
     /**
      * Task name.
      *
@@ -47,8 +46,14 @@ class process_queue extends \core\task\scheduled_task {
         }
         $read = queue::sync_due(100);
         $stats = queue::process(50);
-        mtrace(sprintf('plagiarism_lucide: %d submission(s) read, %d sent, %d completed, %d not analysable, %d waiting%s',
-            $read, $stats['sent'], $stats['completed'], $stats['failed'], $stats['waiting'],
-            settings::auth_block() !== '' ? ' — sending stopped: ' . settings::auth_block() : ''));
+        mtrace(sprintf(
+            'plagiarism_lucide: %d submission(s) read, %d sent, %d completed, %d not analysable, %d waiting%s',
+            $read,
+            $stats['sent'],
+            $stats['completed'],
+            $stats['failed'],
+            $stats['waiting'],
+            settings::auth_block() !== '' ? ' — sending stopped: ' . settings::auth_block() : ''
+        ));
     }
 }
