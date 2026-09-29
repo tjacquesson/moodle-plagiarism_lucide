@@ -35,6 +35,7 @@ require_once($CFG->dirroot . '/plagiarism/lucide/lib.php');
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \plagiarism_lucide\local\queue
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\plagiarism_lucide\local\queue::class)]
 final class queue_test extends \advanced_testcase {
     /** A French text long enough for the API. */
     public const TEXT = '<p>Le numérique occupe une place centrale dans notre quotidien.</p>'
