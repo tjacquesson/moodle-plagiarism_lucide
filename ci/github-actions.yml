@@ -1,3 +1,6 @@
+# To enable on GitHub: move this file to .github/workflows/ci.yml
+# (pushing workflow files needs a token with the "workflow" scope).
+
 name: Moodle plugin CI
 
 on: [push, pull_request]
