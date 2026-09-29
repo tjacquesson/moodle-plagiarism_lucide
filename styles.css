@@ -1,0 +1,162 @@
+.plagiarism-lucide {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    margin: 0.25rem 0;
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.plagiarism-lucide-brand {
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+.plagiarism-lucide-badge {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.plagiarism-lucide-badge--ai {
+    background: #fde8e8;
+    border-color: #f3b3b3;
+    color: #8a1c1c;
+}
+
+.plagiarism-lucide-badge--uncertain {
+    background: #fff4dc;
+    border-color: #f0d08c;
+    color: #6b4a00;
+}
+
+.plagiarism-lucide-badge--human {
+    background: #e5f5ec;
+    border-color: #a8d8bb;
+    color: #1d5b36;
+}
+
+.plagiarism-lucide-badge--warning {
+    background: #fff4dc;
+    border-color: #f0d08c;
+    color: #6b4a00;
+    white-space: normal;
+}
+
+.plagiarism-lucide-badge--muted {
+    background: transparent;
+    border-color: #c8ccd0;
+    color: #4a5056;
+    font-weight: 500;
+    white-space: normal;
+}
+
+.plagiarism-lucide-coverage {
+    color: #4a5056;
+}
+
+.plagiarism-lucide-report {
+    max-width: 52rem;
+}
+
+.plagiarism-lucide-verdict {
+    border-left: 4px solid #c8ccd0;
+    padding: 0.75rem 1rem;
+    margin: 0 0 1rem;
+    background: #f7f8f9;
+}
+
+.plagiarism-lucide-verdict--ai {
+    border-left-color: #c43c3c;
+}
+
+.plagiarism-lucide-verdict--uncertain {
+    border-left-color: #d49a14;
+}
+
+.plagiarism-lucide-verdict--human {
+    border-left-color: #2f8a55;
+}
+
+.plagiarism-lucide-verdict-caption {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #4a5056;
+}
+
+.plagiarism-lucide-verdict-label {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.plagiarism-lucide-verdict-line {
+    margin-top: 0.25rem;
+}
+
+.plagiarism-lucide-details {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.25rem 1rem;
+    margin: 0 0 1rem;
+}
+
+.plagiarism-lucide-details dt {
+    font-weight: 600;
+}
+
+.plagiarism-lucide-details dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.plagiarism-lucide-legend,
+.plagiarism-lucide-note {
+    margin: 0 0 0.75rem;
+    color: #4a5056;
+}
+
+.plagiarism-lucide-text {
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    padding: 1rem 1.25rem;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+    background: #fff;
+    color: #1d2125;
+}
+
+mark.plagiarism-lucide-ai {
+    color: inherit;
+    padding: 0.05em 0;
+    border-radius: 0.15em;
+}
+
+mark.plagiarism-lucide-ai--high {
+    background: #f9c9c9;
+}
+
+mark.plagiarism-lucide-ai--medium {
+    background: #fde5e5;
+}
+
+.plagiarism-lucide-footer {
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
+    color: #6a737b;
+}
+
+@media (max-width: 575px) {
+    .plagiarism-lucide-details {
+        grid-template-columns: 1fr;
+    }
+
+    .plagiarism-lucide-details dd {
+        margin-bottom: 0.5rem;
+    }
+}
