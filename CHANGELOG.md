@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.0 — 2026-10-28
+
+- Verdict wording on the same steps as the Lucide application. With Lucide 3.0,
+  the share of AI decides: 0 % Human, 1-20 % Probably human, 21-60 % Mixed,
+  61-79 % Mostly AI, 80 % and more Written by AI. Lucide sends the verdict;
+  the plugin no longer recomputes it from the score with older bounds, so the
+  wording always matches the colour.
+
 ## 1.0.0 — 2026-09-29
 
 First release.

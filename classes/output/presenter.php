@@ -107,9 +107,30 @@ class presenter {
     }
 
     /**
-     * Verdict wording, on the same five steps as the Lucide application.
+     * Step of each verdict label sent by Lucide, so that Moodle words a verdict like the
+     * Lucide application. Lucide 3.0 labels since 28 October 2026 (share of AI shown by
+     * the application: 0 %, 1-20 %, 21-60 %, 61-79 %, 80 % and more), then the labels
+     * of the older models.
+     */
+    private const LABEL_STEPS = [
+        'Human' => 'veryhuman',
+        'Likely human' => 'human',
+        'Mixed' => 'mixed',
+        'Mostly AI' => 'mostlyai',
+        'Written by AI' => 'writtenai',
+        'Very likely human' => 'veryhuman',
+        'Possibly written by AI' => 'maybe',
+        'Likely written by AI' => 'ai',
+        'Very likely written by AI' => 'veryai',
+    ];
+
+    /**
+     * Verdict wording, on the same steps as the Lucide application.
      *
-     * The step comes from the decision score; the colour comes from the verdict code.
+     * The step comes from the label Lucide sent with the verdict. A label this version
+     * does not know (an older French one, a future one) falls back on the verdict code,
+     * which also gives the colour, refined by the score: the wording never contradicts
+     * the colour.
      *
      * @param \stdClass $row completed source
      * @param bool $short badge wording instead of the report title
@@ -117,10 +138,22 @@ class presenter {
      */
     public static function verdict_label(\stdClass $row, bool $short = false): string {
         $prefix = $short ? 'badge_' : 'verdict_';
-        if ($row->score === null || $row->score === '') {
-            $fallback = ['ai_likely' => 'ai', 'uncertain' => 'maybe', 'human_likely' => 'human'][$row->verdict] ?? 'unknown';
-            return get_string($prefix . $fallback, 'plagiarism_lucide');
+        $known = self::LABEL_STEPS[(string) ($row->verdictlabel ?? '')] ?? null;
+        if ($known !== null && $row->verdict !== null && $row->verdict !== '') {
+            return get_string($prefix . $known, 'plagiarism_lucide');
         }
+        $family = ['ai_likely' => 'ai', 'uncertain' => 'maybe', 'human_likely' => 'human'][$row->verdict] ?? null;
+        $noscore = $row->score === null || $row->score === '';
+        if ($noscore || $family !== null) {
+            $step = $family ?? 'unknown';
+            if (!$noscore && $family === 'human' && (int) $row->score >= 86) {
+                $step = 'veryhuman';
+            } else if (!$noscore && $family === 'ai' && (int) $row->score < 20) {
+                $step = 'veryai';
+            }
+            return get_string($prefix . $step, 'plagiarism_lucide');
+        }
+        // No verdict code stored: steps from the score alone, with the older bounds.
         $score = (int) $row->score;
         if ($score >= 86) {
             $step = 'veryhuman';

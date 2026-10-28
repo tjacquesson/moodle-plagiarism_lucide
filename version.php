@@ -25,8 +25,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'plagiarism_lucide';
-$plugin->version   = 2026092900;
-$plugin->release   = '1.0.0';
+$plugin->version   = 2026102800;
+$plugin->release   = '1.1.0';
 $plugin->requires  = 2024100700; // Moodle 4.5.
 $plugin->supported = [405, 502];
 $plugin->maturity  = MATURITY_STABLE;
